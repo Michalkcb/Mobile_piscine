@@ -30,10 +30,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
       TextEditingController(text: '0');
 
   final List<String> buttons = [
-    '7', '8', '9', '/',
-    '4', '5', '6', '*',
-    '1', '2', '3', '-',
-    '.', '0', '=', '+',
+    'AC', 'C', '/', '*',
+    '7', '8', '9', '-',
+    '4', '5', '6', '+',
+    '1', '2', '3', '.',
+    '0', '=',
   ];
 
   @override
@@ -48,18 +49,39 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   Widget buildButton(String value) {
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: ElevatedButton(
-        onPressed: () => onButtonPressed(value),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-        ),
-        child: Text(
-          value,
-          style: const TextStyle(fontSize: 20),
-        ),
+    return ElevatedButton(
+      onPressed: () => onButtonPressed(value),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 16),
       ),
+      child: Text(
+        value,
+        style: const TextStyle(fontSize: 20),
+      ),
+    );
+  }
+
+  Widget buildDisplayFields() {
+    return Column(
+      children: [
+        TextField(
+          controller: expressionController,
+          readOnly: true,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Expression',
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: resultController,
+          readOnly: true,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Result',
+          ),
+        ),
+      ],
     );
   }
 
@@ -73,34 +95,28 @@ class _CalculatorPageState extends State<CalculatorPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: expressionController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Expression',
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: resultController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Result',
-                ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 4,
-                  childAspectRatio: 1.1,
-                  children: buttons.map(buildButton).toList(),
-                ),
-              ),
-            ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth >= 700;
+              final crossAxisCount = isWide ? 6 : 4;
+              final childAspectRatio = isWide ? 1.5 : 1.1;
+
+              return Column(
+                children: [
+                  buildDisplayFields(),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: crossAxisCount,
+                      childAspectRatio: childAspectRatio,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      children: buttons.map(buildButton).toList(),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
