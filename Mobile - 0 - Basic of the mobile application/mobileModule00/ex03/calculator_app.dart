@@ -62,8 +62,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
     switch (value) {
       case 'AC':
-        expressionController.text = '0';
-        resultController.text = '0';
+        _reset();
         return;
       case 'C':
         _deleteLastCharacter();
@@ -76,33 +75,42 @@ class _CalculatorPageState extends State<CalculatorPage> {
     }
   }
 
+  void _reset() {
+    expressionController.text = '0';
+    resultController.text = '0';
+  }
+
   void _deleteLastCharacter() {
     final current = expressionController.text;
-    if (current.isEmpty || current == '0') {
-      expressionController.text = '0';
-      resultController.text = '0';
+    if (current.isEmpty || current == '0' || current == 'Error') {
+      _reset();
       return;
     }
     if (current.length == 1) {
-      expressionController.text = '0';
-      resultController.text = '0';
+      _reset();
       return;
     }
 
-    expressionController.text = current.substring(0, current.length - 1);
-    if (expressionController.text.isEmpty) {
-      expressionController.text = '0';
-    }
+    final updated = current.substring(0, current.length - 1);
+    expressionController.text = updated.isEmpty ? '0' : updated;
     resultController.text = '0';
   }
 
   void _appendValue(String value) {
     final current = expressionController.text;
 
+    if (current == 'Error') {
+      expressionController.text = value == '.' ? '0.' : value;
+      resultController.text = '0';
+      return;
+    }
+
     if (value == '.') {
       if (_canAppendDecimal(current)) {
-        if (current == '0' || current == '-0') {
+        if (current == '0' || current.isEmpty) {
           expressionController.text = '0.';
+        } else if (_isOperator(current.substring(current.length - 1))) {
+          expressionController.text = '$current0.';
         } else {
           expressionController.text = '$current$value';
         }
@@ -114,8 +122,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
     if (_isOperator(value)) {
       if (current == '0' && value == '-') {
         expressionController.text = '-';
+      } else if (current == '0') {
+        expressionController.text = '0';
       } else {
-        final lastChar = current.isEmpty ? '' : current.substring(current.length - 1);
+        final lastChar = current.substring(current.length - 1);
         if (current == '-' || _isOperator(lastChar)) {
           if (value == '-' && lastChar != '-' && current != '-') {
             expressionController.text = '$current$value';
@@ -130,7 +140,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       return;
     }
 
-    if (current == '0' || current == '-0') {
+    if (current == '0') {
       expressionController.text = value;
     } else {
       expressionController.text = '$current$value';
@@ -156,14 +166,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   void _evaluateExpression() {
     final expression = expressionController.text;
-    if (expression.isEmpty || expression == '0' || expression == '-') {
+    if (expression.isEmpty || expression == '0' || expression == '-' || expression == 'Error') {
       resultController.text = '0';
       return;
     }
 
     try {
       final value = _evaluate(expression);
-      resultController.text = value.toString();
+      resultController.text = _formatResult(value);
     } catch (_) {
       resultController.text = 'Error';
     }
@@ -185,7 +195,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       }
 
       if (char == '-' && (index == 0 || _isOperator(cleaned[index - 1]))) {
-        tokens.add('-u');
+        tokens.add('u-');
         index++;
         continue;
       }
@@ -206,7 +216,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       if (token is double) {
         values.add(token);
       } else if (token is String) {
-        if (token == '-u') {
+        if (token == 'u-') {
           ops.add(token);
         } else {
           while (ops.isNotEmpty && _shouldPop(ops.last, token)) {
@@ -237,15 +247,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   bool _shouldPop(String top, String current) {
-    if (top == '-u') {
+    if (top == 'u-') {
       return false;
     }
+
     final topPrecedence = _precedence(top);
     final currentPrecedence = _precedence(current);
-    if (topPrecedence < currentPrecedence) {
-      return false;
-    }
-    return true;
+    return topPrecedence >= currentPrecedence;
   }
 
   int _precedence(String op) {
@@ -256,7 +264,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       case '*':
       case '/':
         return 2;
-      case '-u':
+      case 'u-':
         return 3;
       default:
         return 0;
@@ -264,7 +272,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   void _applyOperator(List<double> values, String op) {
-    if (op == '-u') {
+    if (op == 'u-') {
       if (values.isEmpty) {
         throw Exception('Invalid expression');
       }
@@ -298,6 +306,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
       default:
         throw Exception('Unknown operator');
     }
+  }
+
+  String _formatResult(double value) {
+    if (value == value.toInt()) {
+      return value.toInt().toString();
+    }
+    return value.toStringAsFixed(10).replaceFirst(RegExp(r'0+$'), '').replaceFirst(RegExp(r'\.$'), '');
   }
 
   Widget buildButton(String value) {
