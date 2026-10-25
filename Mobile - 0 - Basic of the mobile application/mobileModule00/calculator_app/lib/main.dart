@@ -370,14 +370,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        final availableWidth = constraints.maxWidth;
-                        final horizontalSpacing = 8.0 * 3 + 12.0 * 2;
-                        final buttonWidth = (availableWidth - horizontalSpacing) / 4;
-                        final buttonHeight = buttonWidth * 0.7;
+                        final padding = 12.0 * 2;
+                        final gap = 8.0;
+                        final columns = 4;
+                        final rows = 5;
+
+                        final cellWidth =
+                            (constraints.maxWidth - padding - gap * (columns - 1)) / columns;
+                        final availableHeight = constraints.maxHeight;
+                        final cellHeight = (availableHeight - 16.0) / rows;
 
                         return GridView.count(
                           crossAxisCount: 4,
-                          childAspectRatio: buttonWidth / buttonHeight,
+                          childAspectRatio: cellWidth / cellHeight,
                           mainAxisSpacing: 8,
                           crossAxisSpacing: 8,
                           children: buttons.map(buildButton).toList(),
