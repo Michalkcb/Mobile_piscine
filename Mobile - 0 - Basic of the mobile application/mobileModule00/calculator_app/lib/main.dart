@@ -362,29 +362,32 @@ class _CalculatorPageState extends State<CalculatorPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide = constraints.maxWidth >= 700;
-              final crossAxisCount = isWide ? 5 : 4;
-              final childAspectRatio = isWide ? 1.25 : 1.0;
 
-              return Column(
-                children: [
-                  buildDisplayFields(),
-                  const SizedBox(height: 16),
+            child: Column(
+              children: [
+                buildDisplayFields(),
+                const SizedBox(height: 16),
                   Expanded(
-                    child: GridView.count(
-                      crossAxisCount: crossAxisCount,
-                      childAspectRatio: childAspectRatio,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      children: buttons.map(buildButton).toList(),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final availableWidth = constraints.maxWidth;
+                        final horizontalSpacing = 8.0 * 3 + 12.0 * 2;
+                        final buttonWidth = (availableWidth - horizontalSpacing) / 4;
+                        final buttonHeight = buttonWidth * 0.7;
+
+                        return GridView.count(
+                          crossAxisCount: 4,
+                          childAspectRatio: buttonWidth / buttonHeight,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          children: buttons.map(buildButton).toList(),
+                        );
+                      },
                     ),
                   ),
-                ],
-              );
-            },
-          ),
+              ],
+            ),
+
         ),
       ),
     );
