@@ -110,7 +110,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
         if (current == '0' || current.isEmpty) {
           expressionController.text = '0.';
         } else if (_isOperator(current.substring(current.length - 1))) {
-          expressionController.text = '$current0.';
+          expressionController.text = '${current}0.';
         } else {
           expressionController.text = '$current$value';
         }
