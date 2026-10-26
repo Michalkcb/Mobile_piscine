@@ -377,8 +377,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
                         final cellWidth =
                             (constraints.maxWidth - padding - gap * (columns - 1)) / columns;
-                        final availableHeight = constraints.maxHeight;
-                        final cellHeight = (availableHeight - 16.0) / rows;
+                        final availableHeight = constraints.maxHeight - 120.0;
+                        final cellHeight = availableHeight / rows;
 
                         return GridView.count(
                           crossAxisCount: 4,
