@@ -97,20 +97,27 @@ class _CalculatorPageState extends State<CalculatorPage> {
           padding: const EdgeInsets.all(12.0),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final isWide = constraints.maxWidth >= 700;
-              final crossAxisCount = isWide ? 6 : 4;
-              final childAspectRatio = isWide ? 1.5 : 1.1;
+              final columns = 4;
+              final rows = 5;
+              final gap = 8.0;
+
+              final gridHeight = constraints.maxHeight - 180.0; // miejsce po polach i AppBar
+              final buttonHeight = (gridHeight - gap * (rows - 1)) / rows;
 
               return Column(
                 children: [
                   buildDisplayFields(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   Expanded(
                     child: GridView.count(
-                      crossAxisCount: crossAxisCount,
-                      childAspectRatio: childAspectRatio,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
+                      crossAxisCount: columns,
+                      mainAxisSpacing: gap,
+                      crossAxisSpacing: gap,
+                      physics: const NeverScrollableScrollPhysics(),
+                      childAspectRatio:
+                          ((constraints.maxWidth - 24.0 - gap * (columns - 1)) /
+                                  columns) /
+                              buttonHeight,
                       children: buttons.map(buildButton).toList(),
                     ),
                   ),
