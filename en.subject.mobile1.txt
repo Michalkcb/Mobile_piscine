@@ -1,0 +1,96 @@
+Piscine Mobile - 1
+Structure and Logic
+Summary: This document contains the subject matter for Module01 of the Piscine
+Mobile.
+Version: 2.4
+Contents
+I Instructions 2
+II Specific Instructions 3
+III Introduction 4
+IV Exercise 00: BottomBar 5
+V Exercise 01: TopBar 7
+VI Submission and peer-evaluation 9
+1
+Chapter I
+Instructions
+•Only this page will serve as reference. Do not trust rumors.
+•Read attentively the whole document before beginning.
+•Your exercises will be corrected by your piscine colleagues.
+•The document can be relied upon, do not blindly trust the demos or pictures ex-
+ample which can contain not required additions.
+•Got a question? Ask your peer on the right. Otherwise, try your peer on the left.
+•By Odin, by Thor ! Use your brain !!!
+Intra indicates the date and the hour of closing for your
+repositories. This date and hour also corresponds to the beginning
+of the peer-evaluation period for the corresponding piscine day.
+This peer-evaluation period lasts exactly 24h. After 24h passed,
+your missing peer grades will be completed with a 0.
+2
+Chapter II
+Specific Instructions
+The project in this module will continue in the next module, so it is important to complete
+it thoroughly.
+3
+Chapter III
+Introduction
+4
+Chapter IV
+Exercise 00: BottomBar
+Exercise :
+BottomBar
+Turn-in directory : mobileModule01
+Files to turn in : weather_app and all necessary files
+Forbidden functions : None
+In Module01, you will begin preparing your weather application. This application, like
+all the others you will complete by the end of the Piscine, must be responsive.
+To start, create a new project called weather_app.
+Now, you will create the structure of your application with the following components:
+- An AppBar that includes a search TextField and a geolocation button.
+- A BottomBar with 3 tabs: “Currently”, “Today” and “Weekly”.
+- Each tab should have its own content.
+Your application must be responsive.
+The BottomBar:
+•Create a BottomBar with 3 tabs.
+•Each tab should have a name and an icon (Currently, Today, Weekly).
+•You should be able to switch between tabs by clicking on them or by swiping; both
+methods should work.
+5
+Piscine Mobile - 1 Structure and Logic
+•When you switch tabs, the content of the page should change. For now, simply
+display the name of the tab as text, nothing more!
+•When the application starts, the first tab (Currently) should be selected by default.
+In Flutter:
+Use the “TabBar” widget to create a TopBar with tabs.
+Use the “TabBarView” widget to create the different views.
+Use the “BottomAppBar” widget to create the BottomBar.
+6
+Chapter V
+Exercise 01: TopBar
+Exercise :
+TopBar
+Turn-in directory : mobileModule01
+Files to turn in : weather_app and all necessary files
+Forbidden functions : None
+The TopBar:
+•It includes a search TextField.
+•It includes a geolocation button.
+Both the TextField and the geolocation button should work correctly!
+The application should display either the text entered in the TextField or the geolocation
+data, depending on which one is used.
+Details:
+•If you enter text in the search TextField, the application should display the tab
+name along with the entered text in all tabs.
+•If you click the geolocation button, the application should display the tab name
+along with the word “Geolocation” in all tabs.
+At this stage, your application should look like the following basic layout:
+7
+Piscine Mobile - 1 Structure and Logic
+And if you search for a location in the search bar, it should look like this:
+8
+Chapter VI
+Submission and peer-evaluation
+Turn in your assignment in your Git repository as usual. Only the work inside your repos-
+itory will be evaluated during the defense. Don’t hesitate to double check the names of
+your folders and files to ensure they are correct.
+The evaluation process will happen on the computer of the evaluated
+group.
